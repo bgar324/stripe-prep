@@ -1,0 +1,212 @@
+SUPPORT TICKET ROUTING
+
+Original practice problem modeled on practical, multipart coding interviews.
+This is not a reported or confirmed Stripe interview question.
+
+A payments platform receives support tickets from merchants. Route each ticket
+to a support team using a configurable list of rules.
+
+Practice this as a 45-minute team screen. Read only Part 1 first. Implement it,
+run it, and check it before reading the next part.
+
+You do not need external libraries, HTTP requests, or a testing framework.
+
+
+PART 1: ROUTE BY TOPIC
+
+Implement:
+    route_tickets(tickets, rules)
+
+Each ticket has a ticket_id, topic, and country. Each rule has a topic and team.
+For this part, ignore the ticket's country.
+
+For each ticket:
+- Find the first rule whose topic exactly matches the ticket's topic.
+- Assign the ticket to that rule's team.
+- If no rule matches, assign None.
+
+Return a list of dictionaries containing ticket_id and team, in ticket input
+order. Include tickets that could not be assigned.
+
+Example input:
+
+tickets = [
+    {"ticket_id": "t1", "topic": "billing", "country": "US"},
+    {"ticket_id": "t2", "topic": "payouts", "country": "GB"},
+    {"ticket_id": "t3", "topic": "billing", "country": "GB"},
+    {"ticket_id": "t4", "topic": "login", "country": "US"}
+]
+
+rules = [
+    {"topic": "billing", "team": "billing-general"},
+    {"topic": "payouts", "team": "payouts-general"}
+]
+
+Expected result:
+
+[
+    {"ticket_id": "t1", "team": "billing-general"},
+    {"ticket_id": "t2", "team": "payouts-general"},
+    {"ticket_id": "t3", "team": "billing-general"},
+    {"ticket_id": "t4", "team": None}
+]
+
+Assumptions for all parts:
+- Every ticket has all the fields shown above.
+- Ticket IDs are unique within a call.
+- Topics, countries, and team names are nonempty, case-sensitive strings.
+- Input values have the specified types. You do not need malformed-input handling.
+- The tickets list or rules list may be empty.
+- Do not modify the supplied tickets, rules, or capacities.
+
+TESTING CHECKPOINT
+
+In testing-one.py, write your function. Below it, assign the example tickets and
+rules to variables, then add:
+
+    print(route_tickets(tickets, rules))
+
+Click Run. Compare the complete output with the expected result above. Python
+may print the list on one line and use single quotes. That is fine.
+
+Now invent one different input. Say what you expect BEFORE running it, then run
+it. Choose a case that checks a rule the supplied example does not exercise.
+
+Do not move to Part 2 until you have actually called the function and checked
+its output. Writing a function definition alone does not execute the function.
+
+
+PART 2: COUNTRY FILTERS AND PRIORITY
+
+Keep the same function signature and return format:
+
+    route_tickets(tickets, rules)
+
+Every rule now also has:
+- country: an exact country code, or "*" to match any country.
+- priority: a non-negative integer. Higher numbers take precedence.
+
+A rule matches when its topic matches AND its country matches or is "*".
+Among matching rules, select the one with the highest priority.
+If priorities tie, select the rule that appears earlier in the rules list.
+
+An exact country match has no extra preference over "*". Only priority and then rule position determine which matching rule wins. Topics still match exactly.
+
+Use the same tickets as Part 1, with these rules:
+
+rules = [
+    {"topic": "billing", "team": "billing-general", "country": "*", "priority": 10},
+    {"topic": "billing", "team": "billing-us", "country": "US", "priority": 20},
+    {"topic": "payouts", "team": "payouts-general", "country": "*", "priority": 5}
+]
+
+Expected result:
+
+[
+    {"ticket_id": "t1", "team": "billing-us"},
+    {"ticket_id": "t2", "team": "payouts-general"},
+    {"ticket_id": "t3", "team": "billing-general"},
+    {"ticket_id": "t4", "team": None}
+]
+
+For this part and Part 3, every rule includes country and priority. You do not
+need to support rules missing these fields. To rerun a Part 1 check with its
+original behavior, add country "*" and priority 0 to each of its rules.
+
+TESTING CHECKPOINT
+
+Run the new example. Then create a small case that tests how equal priorities
+are resolved. Explain what a wrong output would tell you about your code.
+
+Rerun your earlier checks with the updated rule fields. An unmatched ticket
+must still return team None, and output order must still match ticket order.
+
+If you want Python to compare an answer for you, assign your hand-computed
+answer to expected and write:
+
+    actual = route_tickets(tickets, rules)
+    assert actual == expected, f"expected {expected!r}, got {actual!r}"
+    print("Passed")
+
+A wrong answer raises AssertionError. You may keep using print and comparing
+visually instead. The important part is running and checking, not the syntax.
+
+
+PART 3: TEAM CAPACITY AND FALLBACK
+
+Update the function signature:
+
+    route_tickets(tickets, rules, capacities)
+
+capacities maps each team name to the maximum number of tickets it can receive
+during this call. Every team named by a rule has an entry. Capacities are
+non-negative integers, including zero.
+
+Process tickets in input order.
+
+For each ticket:
+- Consider matching rules in the preference order defined in Part 2.
+- Choose the first of those rules whose team still has capacity.
+- Assign the ticket and consume one slot for that team.
+- If no matching team has capacity, assign None.
+
+A team shares one capacity across ALL rules that name it. Assigning a ticket
+consumes exactly one slot, even if several rules for that team match.
+Unassigned tickets consume no capacity. Do not queue or revisit them.
+
+Each function call starts with fresh capacity from the supplied dictionary.
+Do not mutate that dictionary. Keep the same return format as before.
+
+Use the rules from Part 2 with this new input:
+
+tickets = [
+    {"ticket_id": "t1", "topic": "billing", "country": "US"},
+    {"ticket_id": "t2", "topic": "billing", "country": "US"},
+    {"ticket_id": "t3", "topic": "billing", "country": "GB"},
+    {"ticket_id": "t4", "topic": "payouts", "country": "GB"},
+    {"ticket_id": "t5", "topic": "login", "country": "US"},
+    {"ticket_id": "t6", "topic": "billing", "country": "US"}
+]
+
+capacities = {
+    "billing-us": 1,
+    "billing-general": 1,
+    "payouts-general": 1
+}
+
+Expected result:
+
+[
+    {"ticket_id": "t1", "team": "billing-us"},
+    {"ticket_id": "t2", "team": "billing-general"},
+    {"ticket_id": "t3", "team": None},
+    {"ticket_id": "t4", "team": "payouts-general"},
+    {"ticket_id": "t5", "team": None},
+    {"ticket_id": "t6", "team": None}
+]
+
+The second US billing ticket falls back to billing-general because billing-us
+is full. The GB billing ticket then has no matching team with room. Payouts
+still has its own available slot.
+
+FINAL TESTING CHECKPOINT
+
+Run the example using the three-argument call. Add two small cases of your own
+that exercise behavior not covered by this example. State the expected results
+before running them. Rerun earlier checks with enough capacity that capacity
+does not change their expected assignments.
+
+If a check fails, explain what you expected, what happened, and which rule you
+will inspect. Fix the bug and rerun the failing check plus earlier checks.
+
+Finish by explaining the time and space complexity of your implementation.
+
+What you are practicing for an interviewer:
+- Making a clear prediction, then executing code to check it.
+- Testing more than the supplied happy path.
+- Preserving earlier behavior when adding a requirement.
+- Debugging from a specific mismatch instead of making random edits.
+
+There is no hidden test suite in this exercise. You are responsible for calling
+your function and checking the results. No solution or completed tests are
+included in the starter file.
