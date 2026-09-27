@@ -1,0 +1,136 @@
+SHIPPING COST CALCULATOR
+
+You are building a shipping cost calculator for an online marketplace.
+
+An order contains a destination country and a list of products.
+
+Example:
+
+order = {
+    "country": "US",
+    "items": [
+        {"product": "mouse", "quantity": 2},
+        {"product": "laptop", "quantity": 1}
+    ]
+}
+
+PART 1
+
+Shipping costs are provided as a per-unit price for each product in each country.
+
+Example:
+
+shipping_rates = {
+    "US": {
+        "mouse": 550,
+        "laptop": 1000
+    },
+    "CA": {
+        "mouse": 750,
+        "laptop": 1500
+    }
+}
+
+Implement:
+
+def calculate_shipping(order, shipping_rates):
+    ...
+
+Return the total shipping cost for the order.
+
+For the example above:
+
+2 * 550 + 1 * 1000 = 2100
+
+Expected result:
+
+2100
+
+Assumptions:
+- The destination country exists in shipping_rates.
+- Every product in the order has a shipping rate.
+- Quantities are positive integers.
+- Costs are represented as integers.
+
+
+PART 2
+
+Shipping prices are now based on quantity tiers instead of a single per-unit rate.
+
+Example:
+
+shipping_rates = {
+    "US": {
+        "mouse": [
+            {"min": 1, "max": 2, "price": 550},
+            {"min": 3, "max": None, "price": 500}
+        ],
+        "laptop": [
+            {"min": 1, "max": 1, "price": 1000},
+            {"min": 2, "max": None, "price": 900}
+        ]
+    }
+}
+
+Each tier's price applies only to units that fall inside that tier.
+
+For example, 4 mice cost:
+
+2 * 550 + 2 * 500 = 2100
+
+Update calculate_shipping to support tiered pricing.
+
+Assumptions:
+- Tiers are sorted by min.
+- Tiers do not overlap.
+- The final tier may have max = None, meaning there is no upper bound.
+- Every possible positive quantity is covered by a tier.
+
+
+PART 3
+
+Each pricing tier now has a pricing_type.
+
+pricing_type may be:
+
+"incremental"
+    The price is charged for every unit that falls inside the tier.
+
+"fixed"
+    The price is charged once if the order reaches that tier.
+
+Example:
+
+shipping_rates = {
+    "US": {
+        "mouse": [
+            {
+                "min": 1,
+                "max": 2,
+                "price": 550,
+                "pricing_type": "incremental"
+            },
+            {
+                "min": 3,
+                "max": None,
+                "price": 800,
+                "pricing_type": "fixed"
+            }
+        ]
+    }
+}
+
+For 4 mice:
+
+The first 2 units cost:
+2 * 550 = 1100
+
+The order reaches the second tier, so its fixed cost is charged once:
+800
+
+Total:
+1900
+
+Update calculate_shipping to support both pricing types.
+
+Try to keep the implementation easy to extend if additional pricing types are introduced later.

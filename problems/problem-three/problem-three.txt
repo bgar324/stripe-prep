@@ -1,0 +1,27 @@
+3. Balance Transaction Ledger
+
+Stripe maintains balances by applying a sequence of credits and debits.
+
+You are given transactions in chronological order:
+
+[
+    {"type": "credit", "amount": 1000},
+    {"type": "debit", "amount": 300},
+    {"type": "credit", "amount": 200},
+]
+
+Implement:
+
+def build_balance_history(transactions):
+    ...
+
+Return the account balance after each transaction.
+
+For the example above, return:
+
+[1000, 700, 900]
+
+The account starts with a balance of 0.
+
+Follow-up:
+A debit that would make the balance negative should be rejected. Return both the balance history and the indexes of rejected transactions. Rejected transactions should not affect the balance.

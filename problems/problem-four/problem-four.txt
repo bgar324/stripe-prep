@@ -1,0 +1,57 @@
+4. Subscription Event State
+
+Stripe processes events that describe changes to a subscription over time.
+
+Each event has the form:
+
+{
+    "subscription_id": "sub_123",
+    "type": "created"
+}
+
+Possible event types are:
+
+created
+paused
+resumed
+canceled
+
+Implement:
+
+def subscription_states(events):
+    ...
+
+Return the final state of each subscription.
+
+State transitions work as follows:
+
+created -> active
+paused -> paused
+resumed -> active
+canceled -> canceled
+
+Example:
+
+events = [
+    {"subscription_id": "s1", "type": "created"},
+    {"subscription_id": "s2", "type": "created"},
+    {"subscription_id": "s1", "type": "paused"},
+    {"subscription_id": "s1", "type": "resumed"},
+    {"subscription_id": "s2", "type": "canceled"},
+]
+
+Expected result:
+
+{
+    "s1": "active",
+    "s2": "canceled",
+}
+
+Follow-up:
+Some event sequences are invalid. For example, a subscription cannot be resumed unless it is paused, and a canceled subscription cannot transition again. Return the invalid events in addition to the final states.
+
+no existing state → created → active
+active → paused → paused
+active → canceled → canceled
+paused → resumed → active
+paused → canceled → canceled

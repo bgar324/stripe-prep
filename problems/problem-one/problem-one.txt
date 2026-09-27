@@ -1,0 +1,48 @@
+
+## 1. Merchant Payout Summary
+
+Stripe handles a large volume of payments for businesses. At the end of each day, we want to produce a summary of the money that should be paid out to each merchant.
+
+You are given a list of payment records. Each record contains:
+
+```python
+{
+    "merchant_id": "m_123",
+    "amount": 2500,
+    "currency": "usd",
+    "status": "succeeded"
+}
+```
+
+The `amount` is expressed in the smallest currency unit.
+
+Write a function:
+
+```python
+def compute_payouts(payments):
+    ...
+```
+
+Return a dictionary mapping each merchant to the total amount from payments whose status is `"succeeded"`.
+
+Example:
+
+```python
+payments = [
+    {"merchant_id": "m1", "amount": 1000, "currency": "usd", "status": "succeeded"},
+    {"merchant_id": "m2", "amount": 500, "currency": "usd", "status": "failed"},
+    {"merchant_id": "m1", "amount": 2500, "currency": "usd", "status": "succeeded"},
+]
+```
+
+Expected result:
+
+```python
+{
+    "m1": 3500
+}
+```
+
+### Follow-up
+
+Merchants may accept payments in multiple currencies. Return totals grouped by both merchant and currency.

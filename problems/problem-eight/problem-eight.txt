@@ -1,0 +1,35 @@
+8. Payment Reconciliation
+
+Stripe receives transaction records from multiple internal systems and occasionally needs to reconcile discrepancies.
+
+You are given two lists:
+
+stripe_records = [
+    {"id": "p1", "amount": 1000},
+    {"id": "p2", "amount": 2000},
+]
+
+bank_records = [
+    {"id": "p1", "amount": 1000},
+    {"id": "p2", "amount": 1900},
+    {"id": "p3", "amount": 500},
+]
+
+Implement:
+
+def reconcile(stripe_records, bank_records):
+    ...
+
+Return:
+
+{
+    "matched": ["p1"],
+    "amount_mismatch": ["p2"],
+    "missing_from_stripe": ["p3"],
+    "missing_from_bank": [],
+}
+
+The ordering within each output list should be deterministic.
+
+Follow-up:
+Records can contain duplicate IDs. Before reconciling, combine duplicate IDs by summing their amounts.

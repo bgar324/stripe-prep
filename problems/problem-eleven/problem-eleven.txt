@@ -1,0 +1,32 @@
+11. Invoice Line Item Totals
+
+Stripe invoices can contain many line items.
+
+Each item contains:
+
+{
+    "description": "API usage",
+    "unit_amount": 50,
+    "quantity": 4
+}
+
+Implement:
+
+def invoice_total(items):
+    ...
+
+Return the total invoice amount.
+
+For the item above, its contribution to the total is 200.
+
+Follow-up:
+Some line items represent discounts:
+
+{
+    "description": "Promotional credit",
+    "unit_amount": 500,
+    "quantity": 1,
+    "type": "discount"
+}
+
+Discounts should subtract from the total, but the final invoice total cannot be negative.

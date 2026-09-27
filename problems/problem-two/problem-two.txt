@@ -1,0 +1,42 @@
+Here’s the full thing, just un-markdowned:
+
+Idempotent Request Processor
+
+Stripe APIs may receive the same request more than once because clients retry requests after network failures. We want to avoid processing the same request twice.
+
+Each incoming request has:
+
+{
+"idempotency_key": "abc123",
+"payload": {"amount": 1000, "currency": "usd"}
+}
+
+Implement:
+
+def process_requests(requests):
+...
+
+For each request, return one result.
+
+The first time an idempotency_key is seen, process the request and return "processed".
+If the same key appears again with the same payload, return "duplicate".
+If the same key appears again with a different payload, return "conflict".
+
+Return results in the same order as the input.
+
+Example:
+
+requests = [
+{"idempotency_key": "a", "payload": {"amount": 100}},
+{"idempotency_key": "b", "payload": {"amount": 200}},
+{"idempotency_key": "a", "payload": {"amount": 100}},
+{"idempotency_key": "a", "payload": {"amount": 300}},
+]
+
+Expected result:
+
+["processed", "processed", "duplicate", "conflict"]
+
+Follow-up
+
+Assume dictionary key ordering inside payload should not affect whether two payloads are considered equal.

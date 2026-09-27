@@ -1,0 +1,48 @@
+3. Customer Event Timeline
+
+You receive events in chronological order.
+
+Example:
+
+[
+    {"customer_id": "c1", "type": "created", "timestamp": 10},
+    {"customer_id": "c1", "type": "email_updated", "timestamp": 20, "email": "a@example.com"}
+]
+
+Part 1
+
+Implement:
+
+def customer_states(events):
+    ...
+
+Track the final state for every customer.
+
+Supported event types are created, email_updated, suspended, reactivated, and deleted.
+
+A created customer starts as active. Suspension changes status to suspended. Reactivation returns it to active. Deletion changes it to deleted.
+
+Store the latest email when one has been provided.
+
+Part 2
+
+Some transitions are invalid.
+
+An unknown customer cannot receive any event except created.
+A customer cannot be created twice.
+Only a suspended customer can be reactivated.
+Deleted customers cannot transition again.
+
+Return both the final states and the indexes of invalid events. Invalid events must not modify state.
+
+Part 3
+
+Add support for:
+
+{"customer_id": "c1", "type": "merged", "into": "c2", "timestamp": 100}
+
+After a merge, the source customer becomes unavailable and future events for it are invalid.
+
+A merge is valid only when both customers currently exist and neither is deleted or previously merged.
+
+Return a mapping from every merged customer ID to its final surviving customer ID. Chained merges are possible.

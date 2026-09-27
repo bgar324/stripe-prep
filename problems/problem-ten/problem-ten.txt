@@ -1,0 +1,33 @@
+10. HTTP Retry Policy
+
+Stripe services call other services over HTTP. Some failures are safe to retry while others are not.
+
+You are given responses represented as:
+
+[
+    {"status": 500},
+    {"status": 503},
+    {"status": 200},
+]
+
+Implement:
+
+def perform_request(send_request, max_attempts):
+    ...
+
+send_request() returns an object with a status field.
+
+Rules:
+
+Return immediately on any 2xx response.
+Retry on 429 and any 5xx response.
+Do not retry other 4xx responses.
+Stop after max_attempts total attempts.
+Return the final response.
+
+Follow-up:
+A 429 response may contain:
+
+{"status": 429, "retry_after": 3}
+
+Change your function so that it records how long it would wait before each retry. Do not actually sleep.

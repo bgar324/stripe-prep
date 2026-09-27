@@ -1,0 +1,54 @@
+1. Payment Import Pipeline
+
+Stripe receives payment records from a partner as strings.
+
+Input:
+
+payment_id,merchant_id,amount,currency,status
+p1,m1,1000,usd,succeeded
+p2,m2,500,usd,failed
+p3,m1,2500,usd,succeeded
+
+Assume the header is always present and the fields shown above exist.
+
+Part 1
+
+Implement:
+
+def merchant_totals(csv_text):
+    ...
+
+Parse the input and return the total succeeded payment amount for each merchant.
+
+Example result:
+
+{"m1": 3500}
+
+Part 2
+
+The partner can resend the same payment. A repeated payment_id with identical fields should be ignored.
+
+If the same payment_id appears with different data, include that ID in a conflicts list and do not apply the conflicting row.
+
+Return:
+
+{
+    "totals": {...},
+    "conflicts": [...]
+}
+
+Preserve the effect of the first occurrence.
+
+Part 3
+
+Successful payments can later be refunded.
+
+Input:
+
+record_type,payment_id,merchant_id,amount,currency,status
+payment,p1,m1,1000,usd,succeeded
+refund,r1,p1,400,usd,succeeded
+
+A successful refund subtracts from the merchant associated with its original payment.
+
+Refunds may arrive only after their referenced payment. Extend your implementation to return the final merchant balances. A merchant balance may not fall below zero.

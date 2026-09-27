@@ -1,0 +1,35 @@
+5. API Pagination
+
+Stripe APIs often return large collections using pagination.
+
+You are given a function:
+
+def fetch_page(cursor):
+    ...
+
+It returns:
+
+{
+    "data": [
+        {"id": "cus_1"},
+        {"id": "cus_2"},
+    ],
+    "next_cursor": "cursor_2"
+}
+
+When there are no more pages, next_cursor is None.
+
+Implement:
+
+def fetch_all_customers(fetch_page):
+    ...
+
+Return all customers in the order they are received.
+
+The first call should pass None as the cursor.
+
+Follow-up:
+Due to retries inside the service, the same customer may appear on multiple pages. Return each customer only once, preserving the order in which each ID first appeared.
+
+Follow-up 2:
+Protect against a buggy API that returns the same non-null cursor repeatedly.

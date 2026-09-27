@@ -1,0 +1,42 @@
+2. API Request Log Analyzer
+
+Each log line has the format:
+
+timestamp|request_id|endpoint|status|latency_ms
+
+Example:
+
+100|r1|/payments|200|85
+101|r2|/customers|500|210
+102|r3|/payments|200|70
+
+Timestamps are nondecreasing.
+
+Part 1
+
+Implement:
+
+def endpoint_stats(lines):
+    ...
+
+For each endpoint, return the request count, error count, and total latency.
+
+An error is any status from 500 through 599.
+
+Do not compute averages yet.
+
+Part 2
+
+The same request_id may appear multiple times because of retries.
+
+Only the final occurrence of each request ID should contribute to the endpoint statistics.
+
+Return the statistics using the final endpoint, status, and latency recorded for that request.
+
+Part 3
+
+Also return the endpoint with the highest average latency among endpoints with at least min_requests requests.
+
+If several endpoints tie, return the lexicographically smallest endpoint.
+
+Avoid repeatedly scanning all raw log lines after parsing.

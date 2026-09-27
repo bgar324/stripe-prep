@@ -1,0 +1,32 @@
+6. Rate Limit Window
+
+Stripe needs to protect APIs from clients making too many requests in a short period.
+
+You are given request timestamps in seconds:
+
+timestamps = [1, 2, 3, 8, 9, 10]
+
+Implement:
+
+def allowed_requests(timestamps, limit, window):
+    ...
+
+For each request, return True if it should be allowed and False if it should be rejected.
+
+A request is allowed if there have been fewer than limit previously allowed requests during the inclusive time interval:
+
+[current_time - window + 1, current_time]
+
+Rejected requests do not count toward the limit.
+
+Example:
+
+timestamps = [1, 2, 3, 4]
+limit = 3
+window = 4
+
+Expected result:
+
+[True, True, True, False]
+
+Assume timestamps are provided in nondecreasing order.

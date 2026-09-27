@@ -1,0 +1,26 @@
+12. Transfer Dependency Ordering
+
+Stripe may need to process transfers only after prerequisite transfers have completed.
+
+You are given transfer definitions:
+
+transfers = [
+    {"id": "t1", "depends_on": []},
+    {"id": "t2", "depends_on": ["t1"]},
+    {"id": "t3", "depends_on": ["t1"]},
+    {"id": "t4", "depends_on": ["t2", "t3"]},
+]
+
+Implement:
+
+def processing_order(transfers):
+    ...
+
+Return any valid ordering in which every transfer appears after all of its dependencies.
+
+For the example, one valid answer is:
+
+["t1", "t2", "t3", "t4"]
+
+Follow-up:
+If there is no valid ordering because the dependencies contain a cycle, raise an error.

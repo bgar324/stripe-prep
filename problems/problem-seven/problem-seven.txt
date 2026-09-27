@@ -1,0 +1,23 @@
+7. Webhook Deduplication
+
+Stripe sends webhook events to merchants. Merchants may receive the same event more than once and should process each unique event exactly once.
+
+Events look like:
+
+{
+    "event_id": "evt_123",
+    "type": "payment.succeeded",
+    "created": 1710000000
+}
+
+Implement:
+
+def unique_events(events):
+    ...
+
+Return only the first occurrence of every event_id, preserving input order.
+
+Follow-up:
+An event ID is only remembered for 24 hours. If the same ID appears again more than 24 hours after its previous accepted occurrence, treat it as a new event.
+
+Assume events are sorted by created.

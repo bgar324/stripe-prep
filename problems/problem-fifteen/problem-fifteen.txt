@@ -1,0 +1,28 @@
+15. Account Activity Sessionization
+
+Stripe displays account activity to users. We want to group nearby events into sessions.
+
+You are given timestamps for one account in sorted order:
+
+timestamps = [10, 20, 45, 200, 220]
+
+Two consecutive events belong to the same session if they are at most gap seconds apart.
+
+Implement:
+
+def build_sessions(timestamps, gap):
+    ...
+
+For:
+
+gap = 30
+
+return:
+
+[
+    [10, 20, 45],
+    [200, 220],
+]
+
+Follow-up:
+Instead of returning the raw timestamps, return one object per session containing its start time, end time, and number of events.

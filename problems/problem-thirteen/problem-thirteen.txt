@@ -1,0 +1,28 @@
+13. Authorization Hold Expiration
+
+Stripe may place temporary authorization holds that expire if they are not captured.
+
+You are given holds:
+
+holds = [
+    {"id": "h1", "created": 100, "ttl": 30},
+    {"id": "h2", "created": 120, "ttl": 20},
+]
+
+Implement:
+
+def expired_holds(holds, current_time):
+    ...
+
+A hold is expired when:
+
+current_time >= created + ttl
+
+Return the IDs of all expired holds.
+
+Follow-up:
+Holds may also contain:
+
+{"captured_at": 125}
+
+Captured holds should never be returned as expired if they were captured before their expiration time.

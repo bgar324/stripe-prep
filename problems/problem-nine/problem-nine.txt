@@ -1,0 +1,31 @@
+9. Card Fingerprint Frequency
+
+Stripe may identify repeated use of the same payment method using a stable fingerprint.
+
+You are given:
+
+payments = [
+    {"payment_id": "p1", "fingerprint": "f1"},
+    {"payment_id": "p2", "fingerprint": "f2"},
+    {"payment_id": "p3", "fingerprint": "f1"},
+]
+
+Implement:
+
+def repeated_fingerprints(payments, threshold):
+    ...
+
+Return all fingerprints that occur at least threshold times, along with their counts.
+
+For:
+
+threshold = 2
+
+return:
+
+{
+    "f1": 2
+}
+
+Follow-up:
+Return the associated payment IDs for every fingerprint that meets the threshold.

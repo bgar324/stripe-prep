@@ -1,0 +1,52 @@
+5. Paginated Transaction Export
+
+You are given:
+
+def fetch_page(cursor):
+    ...
+
+It returns:
+
+{
+    "transactions": [
+        {"id": "t1", "created": 100, "amount": 500}
+    ],
+    "next_cursor": "abc"
+}
+
+Part 1
+
+Implement:
+
+def export_transactions(fetch_page):
+    ...
+
+Fetch every page and return all transactions in the order received.
+
+The first call uses None.
+
+Part 2
+
+The same transaction ID can appear on multiple pages.
+
+Return each transaction only once, preserving its first-seen position.
+
+If a repeated ID contains different data, retain the first version and include the ID in a conflicts set.
+
+Part 3
+
+A buggy server can produce cursor cycles, such as:
+
+A -> B -> C -> B
+
+Stop before requesting a cursor for the second time.
+
+Return:
+
+{
+    "transactions": [...],
+    "conflicts": {...},
+    "cursor_cycle_detected": True or False
+}
+
+Be ready to explain why your implementation terminates.

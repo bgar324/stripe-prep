@@ -1,0 +1,41 @@
+6. Rolling Card Velocity Check
+
+Payments arrive in nondecreasing timestamp order.
+
+Example:
+
+[
+    {"payment_id": "p1", "fingerprint": "f1", "timestamp": 10, "amount": 100},
+    {"payment_id": "p2", "fingerprint": "f1", "timestamp": 20, "amount": 300}
+]
+
+Part 1
+
+Implement:
+
+def flag_velocity(payments, max_payments, window):
+    ...
+
+Flag a payment when the same fingerprint already has at least max_payments previously accepted payments in the inclusive interval:
+
+[current_time - window + 1, current_time]
+
+Flagged payments do not count toward future limits.
+
+Return a Boolean for every input payment.
+
+Part 2
+
+Instead of limiting the number of payments, limit the sum of accepted payment amounts within the window.
+
+A payment should be flagged if accepting it would make the rolling amount exceed max_amount.
+
+Part 3
+
+The input now contains many fingerprints interleaved together.
+
+Keep the same behavior separately for each fingerprint.
+
+Discuss the total runtime in terms of the number of payments.
+
+Your implementation should not rescan the entire previous payment history for every new payment.

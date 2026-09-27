@@ -1,0 +1,30 @@
+14. Log Parsing
+
+Stripe services generate structured log lines that may need to be analyzed during incidents.
+
+Each line is formatted as:
+
+timestamp|service|level|message
+
+Example:
+
+1710000000|payments-api|ERROR|database timeout
+1710000001|payments-api|INFO|retrying request
+1710000002|billing-api|ERROR|invalid invoice
+
+Implement:
+
+def error_counts(lines):
+    ...
+
+Return the number of ERROR entries for each service.
+
+Expected result:
+
+{
+    "payments-api": 1,
+    "billing-api": 1,
+}
+
+Follow-up:
+The message itself may contain the | character. Update your parser so that only the first three separators are treated as field delimiters.
