@@ -1,0 +1,156 @@
+LOAD BALANCER
+
+You are building a simple load balancer for a service.
+
+A fixed set of servers is available:
+
+servers = [
+    {"server_id": "s1", "capacity": 2},
+    {"server_id": "s2", "capacity": 2},
+    {"server_id": "s3", "capacity": 3}
+]
+
+Requests arrive as events.
+
+PART 1
+
+For now, events only have this format:
+
+CONNECT <user_id>
+
+Implement:
+
+def process_events(servers, events):
+    ...
+
+For each CONNECT event:
+
+- Assign the user to the server with the fewest currently connected users.
+- If multiple servers have the same number of users, choose the server with the lexicographically smallest server_id.
+- A user may only be connected to one server at a time.
+
+Return a list containing the assigned server_id for each CONNECT event, in event order.
+
+Example:
+
+events = [
+    "CONNECT u1",
+    "CONNECT u2",
+    "CONNECT u3"
+]
+
+Expected result:
+
+[
+    "s1",
+    "s2",
+    "s3"
+]
+
+Assumptions:
+- server_id values are unique.
+- user_id values are non-empty strings.
+- Ignore capacity for this part.
+
+
+PART 2
+
+Events may now also have this format:
+
+DISCONNECT <user_id>
+
+A DISCONNECT event removes that user from their current server.
+
+If the user is not currently connected, do nothing.
+
+Update process_events to support both event types.
+
+Only CONNECT events should add entries to the returned result.
+
+Example:
+
+events = [
+    "CONNECT u1",
+    "CONNECT u2",
+    "DISCONNECT u1",
+    "CONNECT u3"
+]
+
+Think about what data structures let you:
+- find a user's current server quickly
+- update the number of users on a server quickly
+
+
+PART 3
+
+Users are now sticky.
+
+If a user disconnects and later reconnects, prefer their previous server as long as that server still exists.
+
+Otherwise, use the normal least-loaded-server rule.
+
+Example:
+
+events = [
+    "CONNECT u1",
+    "CONNECT u2",
+    "DISCONNECT u1",
+    "CONNECT u1"
+]
+
+If u1 was originally assigned to s1, the final CONNECT should assign u1 back to s1.
+
+Update process_events to support sticky routing.
+
+
+PART 4
+
+Server capacity now matters.
+
+A CONNECT may only assign a user to a server whose current number of users is less than its capacity.
+
+Sticky routing should only use the user's previous server if that server still has available capacity.
+
+If no server has available capacity, assign None.
+
+Return None for that CONNECT event.
+
+Example:
+
+servers = [
+    {"server_id": "s1", "capacity": 1}
+]
+
+events = [
+    "CONNECT u1",
+    "CONNECT u2"
+]
+
+Expected result:
+
+[
+    "s1",
+    None
+]
+
+Try to avoid scanning more state than necessary for each operation.
+
+
+PART 5
+
+Events may now also have this format:
+
+SHUTDOWN <server_id>
+
+When a server shuts down:
+
+- It can no longer receive new connections.
+- Every currently connected user on that server must be disconnected from it.
+- Those users should immediately be reassigned using the normal routing rules.
+- Sticky routing should not route a user back to a server that has shut down.
+
+If a user cannot be reassigned, they remain disconnected.
+
+Update your implementation.
+
+Discuss what state you would maintain if the number of users and servers became very large.

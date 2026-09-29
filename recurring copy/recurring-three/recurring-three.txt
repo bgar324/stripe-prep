@@ -1,0 +1,153 @@
+INVOICE RECONCILIATION
+
+A business receives invoice data and payment data from two different systems.
+
+Invoices are represented as strings:
+
+invoices = [
+    "invoiceA,2026-01-10,1000",
+    "invoiceB,2026-01-15,2500",
+    "invoiceC,2026-01-30,500"
+]
+
+Each invoice string contains:
+
+invoice_id,due_date,amount
+
+Payments are also represented as strings:
+
+payments = [
+    "payment1,1000,Paying off: invoiceA",
+    "payment2,2000,Paying off: invoiceB",
+    "payment3,500,Paying off: invoiceX"
+]
+
+Each payment string contains:
+
+payment_id,amount,memo
+
+
+PART 1
+
+A payment memo may identify the invoice being paid using this exact format:
+
+Paying off: <invoice_id>
+
+Implement:
+
+def reconcile(invoices, payments):
+    ...
+
+For every payment whose memo references an existing invoice, produce a string in this format:
+
+<payment_id> pays <payment_amount> toward <invoice_id> due on <due_date>
+
+For the example above, the result should include:
+
+[
+    "payment1 pays 1000 toward invoiceA due on 2026-01-10",
+    "payment2 pays 2000 toward invoiceB due on 2026-01-15"
+]
+
+Ignore payments that reference an invoice that does not exist.
+
+Assumptions:
+- Invoice IDs are unique.
+- Payment IDs are unique.
+- Amounts are non-negative integers.
+- The memo format is valid whenever it begins with "Paying off: ".
+
+
+PART 2
+
+Instead of returning formatted strings, categorize each payment.
+
+Return:
+
+{
+    "paid_in_full": [...],
+    "underpaid": [...],
+    "overpaid": [...],
+    "unknown_invoice": [...]
+}
+
+For each payment:
+
+- paid_in_full:
+    payment amount exactly equals invoice amount
+
+- underpaid:
+    payment amount is less than invoice amount
+
+- overpaid:
+    payment amount is greater than invoice amount
+
+- unknown_invoice:
+    the referenced invoice does not exist
+
+Each list should contain payment IDs in input order.
+
+For the example above:
+
+payment1 is paid_in_full.
+payment2 is underpaid.
+payment3 references an unknown invoice.
+
+
+PART 3
+
+An invoice may now receive multiple payments.
+
+Example:
+
+invoices = [
+    "invoiceA,2026-01-10,1000"
+]
+
+payments = [
+    "payment1,400,Paying off: invoiceA",
+    "payment2,300,Paying off: invoiceA",
+    "payment3,300,Paying off: invoiceA",
+    "payment4,100,Paying off: invoiceA"
+]
+
+Payments are processed in input order.
+
+Track the remaining balance of each invoice.
+
+A payment is:
+
+"accepted"
+    if its amount is less than or equal to the invoice's remaining balance
+
+"excess"
+    if its amount is greater than the invoice's remaining balance
+
+Excess payments do not modify the remaining balance.
+
+Unknown invoices still do not modify any balance.
+
+Implement:
+
+def reconcile(invoices, payments):
+    ...
+
+Return:
+
+{
+    "accepted": [...],
+    "excess": [...],
+    "unknown_invoice": [...],
+    "remaining_balances": {
+        ...
+    }
+}
+
+For the example above:
+
+payment1 is accepted. Remaining balance = 600.
+payment2 is accepted. Remaining balance = 300.
+payment3 is accepted. Remaining balance = 0.
+payment4 is excess. Remaining balance remains 0.
+
+Think about what data structure lets you process each payment without repeatedly scanning all invoices.

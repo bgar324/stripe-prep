@@ -1,0 +1,186 @@
+NESTED FIELD SELECTION
+
+A system receives records as nested dictionaries.
+
+Example:
+
+records = [
+    {
+        "merchant": {
+            "id": "m1",
+            "owner": {
+                "email": "owner@example.com"
+            }
+        },
+        "country": "US"
+    }
+]
+
+Fields to select are provided as dot-separated paths:
+
+fields = [
+    "merchant.id",
+    "merchant.owner.email",
+    "country"
+]
+
+PART 1
+
+Implement:
+
+def select_fields(records, fields):
+    ...
+
+For each record, return a dictionary containing one entry for every requested field.
+
+The key should be the original field path.
+
+The value should be the value found at that path.
+
+Example result:
+
+[
+    {
+        "merchant.id": "m1",
+        "merchant.owner.email": "owner@example.com",
+        "country": "US"
+    }
+]
+
+Assumptions:
+- Every requested path exists.
+- Every intermediate value in a path is a dictionary.
+
+
+PART 2
+
+Requested paths may now be missing.
+
+If any component of a path does not exist, return None for that field.
+
+Example:
+
+fields = [
+    "merchant.id",
+    "merchant.owner.phone"
+]
+
+Expected result:
+
+[
+    {
+        "merchant.id": "m1",
+        "merchant.owner.phone": None
+    }
+]
+
+Do not raise an exception for a missing path.
+
+Intermediate values may also have the wrong type.
+
+For example:
+
+{
+    "merchant": None
+}
+
+should produce None for:
+
+merchant.id
+
+Try to keep the path traversal logic in one place.
+
+
+PART 3
+
+Fields are now described using validation rules.
+
+Example:
+
+field_specs = {
+    "merchant.id": {
+        "required": True,
+        "type": "string"
+    },
+    "merchant.age": {
+        "required": False,
+        "type": "integer"
+    }
+}
+
+Supported types are:
+
+"string"
+"integer"
+"boolean"
+
+Implement:
+
+def select_and_validate(records, field_specs):
+    ...
+
+For each record, return:
+
+{
+    "values": {
+        ...
+    },
+    "errors": [
+        ...
+    ]
+}
+
+Rules:
+
+- If a required field is missing, add:
+  "<path> is required"
+
+- If a field exists but has the wrong type, add:
+  "<path> has invalid type"
+
+- Optional missing fields are allowed.
+
+Preserve the field order from field_specs when producing errors.
+
+
+PART 4
+
+Field specifications may now include:
+
+"default"
+"output_name"
+
+Example:
+
+field_specs = {
+    "merchant.id": {
+        "required": True,
+        "type": "string",
+        "output_name": "merchant_id"
+    },
+    "merchant.country": {
+        "required": False,
+        "type": "string",
+        "default": "US",
+        "output_name": "country"
+    }
+}
+
+Rules:
+
+- If an optional field is missing and has a default, use the default.
+- If output_name exists, use it as the key in values.
+- Otherwise use the original path.
+- Defaults must also satisfy the declared type.
+- A required missing field is still an error even if a default is provided.
+
+Update your implementation.
+
+Try to structure the solution so that:
+- traversing a nested path
+- validating a value
+- formatting the output
+
+are not tightly coupled.
+
+Discuss how you would extend the system to support new validation rules without adding a long chain of special cases.

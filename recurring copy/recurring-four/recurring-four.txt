@@ -1,0 +1,131 @@
+BUSINESS VERIFICATION
+
+Stripe receives business onboarding records as CSV text.
+
+Example:
+
+business_id,name,country,business_type,tax_id,website
+b1,Acme Inc,US,company,12-3456789,https://acme.com
+b2,Jane Smith,US,individual,123456789,
+b3,Example Ltd,GB,company,12345678,https://example.co.uk
+
+PART 1
+
+Implement:
+
+def validate_businesses(csv_text):
+    ...
+
+Validate each record using these rules:
+
+US company:
+    tax_id must have the format:
+    NN-NNNNNNN
+
+US individual:
+    tax_id must contain exactly 9 digits
+
+GB company:
+    tax_id must contain exactly 8 digits
+
+Return:
+
+{
+    "valid": [...],
+    "invalid": [...]
+}
+
+Each list should contain business IDs in input order.
+
+Assumptions:
+- The header is always present.
+- All fields are present, although a field may be empty.
+- country is either US or GB.
+- business_type is either company or individual.
+
+
+PART 2
+
+Business names must now be normalized before additional validation.
+
+Normalize a name by:
+
+1. Converting it to lowercase.
+2. Removing punctuation.
+3. Splitting it into words.
+4. Removing these suffixes when they appear as the final word:
+
+inc
+incorporated
+llc
+ltd
+limited
+corp
+corporation
+
+Examples:
+
+"Acme, Inc." -> "acme"
+"Stripe Payments LLC" -> "stripe payments"
+"Example Limited" -> "example"
+
+A list of blocked business names is provided:
+
+blocked_names = [
+    "acme",
+    "fake bank",
+    "test business"
+]
+
+If the normalized business name exactly matches a blocked name, the business is invalid even if its tax ID is valid.
+
+Update:
+
+def validate_businesses(csv_text, blocked_names):
+    ...
+
+Return the same structure as Part 1.
+
+
+PART 3
+
+The blocked-name check is now token based.
+
+A business should be rejected if every significant word from a blocked name appears in the normalized business name, regardless of order.
+
+Examples:
+
+blocked name:
+"global payments"
+
+business name:
+"Global Online Payments LLC"
+
+Normalized significant words:
+{"global", "online", "payments"}
+
+The blocked-name words:
+{"global", "payments"}
+
+Because all blocked-name words are present, the business is invalid.
+
+However:
+
+blocked name:
+"global payments"
+
+business name:
+"Global Software LLC"
+
+is allowed because "payments" is missing.
+
+Update validate_businesses to support this rule.
+
+Try to avoid repeatedly normalizing the same strings.
+
+Discuss the runtime in terms of:
+- number of business records
+- number of blocked names
+- number of words per name
+
+If this system needed to validate millions of businesses against thousands of blocked names, what would you consider changing?

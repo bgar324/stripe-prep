@@ -1,0 +1,111 @@
+TRANSACTION FEE CALCULATOR
+
+Stripe receives transaction records from another system as CSV text.
+
+Example:
+
+id,merchant_id,amount,currency,country,provider,type,status
+tx1,m1,1000,usd,US,card,payment,succeeded
+tx2,m1,2500,usd,US,card,payment,succeeded
+tx3,m2,500,usd,CA,bank,payment,failed
+
+Amounts are represented in the smallest currency unit.
+
+PART 1
+
+For every succeeded payment, charge a fee equal to:
+
+2.9% of the transaction amount + 30
+
+Ignore transactions whose status is not "succeeded".
+
+Implement:
+
+def calculate_fees(csv_text):
+    ...
+
+Return the total fee charged to each merchant.
+
+Round each individual transaction fee to the nearest integer before adding it to the merchant total.
+
+Example result:
+
+{
+    "m1": 162
+}
+
+Assumptions:
+- The CSV header is always present.
+- Every row contains all fields shown above.
+- amount is a non-negative integer.
+- You do not need to use Python's csv module.
+
+
+PART 2
+
+Fee rules now depend on the payment provider and the buyer's country.
+
+Rules:
+
+card:
+    US:
+        2.9% + 30
+    non-US:
+        3.9% + 30
+
+bank:
+    any country:
+        0.8%
+        maximum fee: 500
+
+Only succeeded payment transactions should be charged.
+
+Update calculate_fees to apply the correct rule to every transaction.
+
+Examples:
+
+A US card payment of 1000:
+round(1000 * 0.029 + 30) = 59
+
+A Canadian card payment of 1000:
+round(1000 * 0.039 + 30) = 69
+
+A bank payment of 100000:
+round(100000 * 0.008) = 800
+but the maximum bank fee is 500,
+so the fee is 500.
+
+
+PART 3
+
+Some merchants have custom fee overrides.
+
+Overrides are passed separately:
+
+merchant_overrides = {
+    "m1": {
+        "card": {
+            "percent": 0.020,
+            "fixed": 20
+        }
+    },
+    "m7": {
+        "bank": {
+            "percent": 0.005,
+            "max_fee": 300
+        }
+    }
+}
+
+If a merchant has an override for the transaction's provider, use that rule instead of the default rule.
+
+If no matching override exists, use the default rule from Part 2.
+
+Update the function:
+
+def calculate_fees(csv_text, merchant_overrides):
+    ...
+
+The fee calculation should remain easy to read even as more fee rules are added.
+
+Discuss how you would structure the code so that parsing transactions and calculating fees are not tightly coupled.

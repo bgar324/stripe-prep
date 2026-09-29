@@ -1,0 +1,145 @@
+FRAUD EVENT PROCESSOR
+
+A payments system receives transaction events.
+
+Each event is represented as a comma-separated string.
+
+Example:
+
+events = [
+    "CHARGE,c1,m1,1000,true",
+    "CHARGE,c2,m1,2500,false",
+    "CHARGE,c3,m2,500,true"
+]
+
+A CHARGE event has the format:
+
+CHARGE,<charge_id>,<merchant_id>,<amount>,<is_fraudulent>
+
+is_fraudulent is either "true" or "false".
+
+PART 1
+
+A merchant should be flagged once its number of fraudulent charges reaches a merchant-specific threshold.
+
+Example:
+
+thresholds = {
+    "m1": 2,
+    "m2": 1
+}
+
+Implement:
+
+def find_flagged_merchants(events, thresholds):
+    ...
+
+Return the merchant IDs that become flagged, in the order they first become flagged.
+
+A merchant should appear at most once.
+
+For the example above:
+
+m2 becomes flagged after c3.
+
+Expected result:
+
+[
+    "m2"
+]
+
+Assumptions:
+- charge_id values are unique.
+- merchant_id values exist in thresholds.
+- amount is a non-negative integer.
+
+
+PART 2
+
+Thresholds are now ratios instead of counts.
+
+Example:
+
+thresholds = {
+    "m1": 0.50,
+    "m2": 0.25
+}
+
+A merchant should be flagged if:
+
+fraudulent_charges / total_charges >= threshold
+
+However, a merchant should only be evaluated once it has processed at least min_charges charges.
+
+Update:
+
+def find_flagged_merchants(events, thresholds, min_charges):
+    ...
+
+Example:
+
+If min_charges = 3, a merchant with:
+
+2 fraudulent charges
+3 total charges
+
+has a fraud ratio of:
+
+2 / 3
+
+and may be flagged depending on its threshold.
+
+Think carefully about when the threshold check should happen.
+
+
+PART 3
+
+Events may now also have this format:
+
+DISPUTE,<charge_id>
+
+A dispute means the referenced charge should no longer count as fraudulent.
+
+If the charge was previously marked fraudulent:
+
+- decrement that merchant's fraudulent charge count
+
+If the charge was not fraudulent:
+
+- do not change the fraudulent count
+
+A charge may only be disputed once.
+
+Duplicate disputes should have no effect.
+
+Update the function to process both CHARGE and DISPUTE events.
+
+Return the merchants that are flagged after all events have been processed.
+
+Preserve merchant input order based on when each merchant first appears in the event stream.
+
+Think about what information you need to save for every charge so that a later dispute can update the correct merchant efficiently.
+
+
+PART 4
+
+Events are no longer guaranteed to arrive in dependency order.
+
+A DISPUTE event may appear before the corresponding CHARGE event.
+
+Example:
+
+events = [
+    "DISPUTE,c7",
+    "CHARGE,c7,m1,1000,true"
+]
+
+The final result should be equivalent to processing the charge first and then disputing it.
+
+Update your implementation so that the final merchant state is correct even when disputes arrive before their charges.
+
+Assumptions:
+- Every disputed charge_id will eventually appear as a CHARGE event.
+- Duplicate CHARGE events do not occur.
+
+Discuss how your design handles pending information and idempotency.
